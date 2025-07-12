@@ -15,6 +15,7 @@ st.title('📈 Stock Trend & Forecasting App')
 # --- Date Range ---
 start = '2012-01-01'
 end = '2022-12-31'
+#hello
 
 # --- Stock Ticker Input ---
 user_input = st.text_input('Enter Stock Ticker (e.g., AAPL, TSLA, INFY):', 'AAPL')
