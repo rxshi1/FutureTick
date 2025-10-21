@@ -5,6 +5,8 @@ import yfinance as yf
 import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 import joblib
+from keras.models import load_model   # ✅ FIX: added this import
+import os
 
 # --- App Title ---
 st.set_page_config(layout="wide")
@@ -29,29 +31,34 @@ try:
 
         # --- Closing Price Chart ---
         st.subheader('📊 Closing Price vs Time')
-        fig1 = plt.figure(figsize=(12,6))
-        plt.plot(df['Close'], label='Close Price')
-        plt.legend()
+        fig1, ax1 = plt.subplots(figsize=(12,6))
+        ax1.plot(df['Close'], label='Close Price')
+        ax1.legend()
         st.pyplot(fig1)
 
         # --- Closing Price + 100MA ---
         st.subheader('📉 Closing Price with 100-Day MA')
         ma100 = df['Close'].rolling(100).mean()
-        fig2 = plt.figure(figsize=(12,6))
-        plt.plot(ma100, label='100MA')
-        plt.plot(df['Close'], label='Close Price')
-        plt.legend()
+        fig2, ax2 = plt.subplots(figsize=(12,6))
+        ax2.plot(df['Close'], label='Close Price')
+        ax2.plot(ma100, label='100MA')
+        ax2.legend()
         st.pyplot(fig2)
 
         # --- Closing Price + 100MA + 200MA ---
         st.subheader('📉 Closing Price with 100-Day & 200-Day MA')
         ma200 = df['Close'].rolling(200).mean()
-        fig3 = plt.figure(figsize=(12,6))
-        plt.plot(ma100, label='100MA')
-        plt.plot(ma200, label='200MA')
-        plt.plot(df['Close'], label='Close Price')
-        plt.legend()
+        fig3, ax3 = plt.subplots(figsize=(12,6))
+        ax3.plot(df['Close'], label='Close Price')
+        ax3.plot(ma100, label='100MA')
+        ax3.plot(ma200, label='200MA')
+        ax3.legend()
         st.pyplot(fig3)
+
+        # --- Check if model and scaler exist ---
+        if not os.path.exists("keras_model.h5") or not os.path.exists("scaler.save"):
+            st.error("Model or Scaler file not found. Please make sure 'keras_model.h5' and 'scaler.save' are in the same folder.")
+            st.stop()
 
         # --- Load LSTM Model and Scaler ---
         model = load_model('keras_model.h5')
@@ -81,10 +88,10 @@ try:
 
         # --- Plot Forecast ---
         st.subheader('🔮 Forecasted Stock Price (Next 30 Days)')
-        fig4 = plt.figure(figsize=(12,6))
-        plt.plot(df['Close'], label='Historical')
-        plt.plot(future_dates, forecast, label='Forecast', color='green')
-        plt.legend()
+        fig4, ax4 = plt.subplots(figsize=(12,6))
+        ax4.plot(df.index, df['Close'], label='Historical')
+        ax4.plot(future_dates, forecast, label='Forecast (30 Days)', color='red', linestyle='dashed')
+        ax4.legend()
         st.pyplot(fig4)
 
         # --- Download Button ---
