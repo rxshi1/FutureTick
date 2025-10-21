@@ -5,6 +5,10 @@ import yfinance as yf
 import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 import joblib
+from tensorflow.keras.models import load_model
+
+
+
 
 # --- App Title ---
 st.set_page_config(layout="wide")
