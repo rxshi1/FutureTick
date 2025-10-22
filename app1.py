@@ -5,6 +5,7 @@ import yfinance as yf
 import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 import joblib
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 
 # --- App Title ---
